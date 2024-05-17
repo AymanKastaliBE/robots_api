@@ -1,0 +1,71 @@
+{% extends "index.html" %}
+{% load rest_framework %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <div class="card shadow mt-5 col-md-6 offset-md-3 border-0">
+        <div class="card-header">
+            <h2 class="text-center mb-0 fw-bold text-light">Sign Up</h2>
+        </div>
+        <div class="card-body">
+            <form id="signup-form" method="POST">
+                {% csrf_token %}
+                <label for="username" class="fw-bold">Username*</label>
+                <input class="form-control mb-3" type="text" id="username" name="username" placeholder="Username" required>
+                <label for="password" class="fw-bold">Password*</label>
+                <input class="form-control mb-3" type="password" id="password" name="password" placeholder="Password" required>
+                <label for="password_retype" class="fw-bold">Password Retype*</label>
+                <input class="form-control mb-3" type="password" id="re_password" name="re_password" placeholder="Retupe Password" required>
+            
+                <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorMessage"></div>
+                <button type="submit" class="btn btn-success fw-bold col-12">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+        fetch("{% url SIGNUP_URL_POST %}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    console.error('data: ', data)
+                    displayErrors(data);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data){
+                window.location.href = "{% url LOGIN_URL %}";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    function displayErrors(errors) {
+        let errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerHTML = '';
+        
+        for (let key in errors) {
+            if (errors.hasOwnProperty(key)) {
+                errorMessage.innerHTML += `<span>${errors[key]}</span>`;
+            }
+        }
+        
+        errorMessage.classList.remove('d-none');
+    }
+</script>
+{% endblock %}

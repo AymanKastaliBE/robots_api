@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+{% load rest_framework %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <div class="card shadow mt-5 col-md-6 offset-md-3 border-0">
+        <div class="card-header">
+            <h2 class="text-center mb-0 fw-bold text-light">Login</h2>
+        </div>
+        <div class="card-body">
+            <form id="login-form" method="post">
+                {% csrf_token %}
+                <label for="username" class="fw-bold">Username*</label>
+                <input class="form-control mb-3" type="username" name="username" placeholder="Username" required>
+                <label for="password" class="fw-bold">Password*</label>
+                <input class="form-control mb-3" type="password" name="password" placeholder="Password" required>
+                <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorMessage">
+                    <span id="errorText"></span>
+                </div>
+                <button type="submit" class="btn btn-primary fw-bold col-12">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+        fetch("{% url LOGIN_URL %}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    document.getElementById('errorText').innerText = data.non_field_errors.join('\n');
+                    document.getElementById('errorMessage').classList.remove('d-none');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data){
+                window.location.href = "{% url USER_PROFILE_URL %}";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle errors here if needed
+        });
+    });
+</script>
+{% endblock %}

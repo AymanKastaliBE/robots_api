@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% load rest_framework %}
+{% load custom_filters  %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<h1>
+    {{request.user.is_authenticated}}
+<h1>
+{% endblock %}

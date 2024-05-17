@@ -1,0 +1,551 @@
+{% extends "index.html" %}
+{% load custom_filters  %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<body>
+    <div class="row g-0">
+        <div class="col-2">
+            <div class="card shadow h-100" style="height: 100vh">
+                <div class="card-header mb-3" style="background-color: #9c3327">
+                    <h2>
+                        <b class="text-light">
+                            Applications
+                        </b>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="d-flex align-items-start">
+                            <div class="nav flex-column nav-pills me-3 col-12" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <button class="nav-link active fw-bold" id="v-pills-customer-service-tab" data-bs-toggle="pill" data-bs-target="#v-pills-customer-service" type="button" role="tab" aria-controls="v-pills-customer-service" aria-selected="true">Customer Service</button>
+                                <button class="nav-link fw-bold" id="v-pills-instructor-tab" data-bs-toggle="pill" data-bs-target="#v-pills-instructor" type="button" role="tab" aria-controls="v-pills-instructor" aria-selected="false">Instructor</button>
+                                <button class="nav-link fw-bold" id="v-pills-airport-tab" data-bs-toggle="pill" data-bs-target="#v-pills-airport" type="button" role="tab" aria-controls="v-pills-airport" aria-selected="false">Airport</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <form action="{% url 'gdrfad_api:dashboard_view' %}" method="GET">
+                        <div class="row g-2">
+                            <div class="col">
+                                <b style="color: #9c3327">
+                                    Start Date:
+                                </b>
+                                <input type="date" class="form-control" name="start_date" id="start_date" required>
+                            </div>
+                            <div class="col">
+                                <b style="color: #9c3327">
+                                    End Date:
+                                </b>
+                                <input type="date" class="form-control" name="end_date" id="end_date" required>
+                            </div>
+                        </div>
+                        <button name="action" value="show_data" data-action="show_data" class="btn btn-primary fw-bold mt-3 col-12" id="showData" type="submit">
+                            Show Data
+                        </button>
+                        <button name="action" value="download_report" data-action="download_report" class="btn btn-success fw-bold mt-1 col-12" id="downloadReport" type="submit">
+                            Download Report
+                        </button>
+                    </form>
+                    <hr>
+                    <b style="color: #9c3327">
+                        Created by:
+                    </b>
+                    <a target="_blank" href="https://actiontoaction.ai" style="text-decoration: none;">
+                        <img src="https://web.opendrive.com/api/v1/download/file.json/MTNfMjMzMTAzODFf?temp_key=%1A%BA.%A7m%3A%D2%99%E0&inline=1" style="height: auto" class="w-100">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="card shadow h-100" style="height: 100vh">
+                <div class="card-header mb-3 d-flex align-items-center justify-content-between" style="background-color: #9c3327">
+                    <h2>
+                        <b class="text-light">
+                            Dashboard
+                        </b>
+                    </h2>
+                    <div class="text-light">
+                        <b id="date" class="me-2"></b>
+                        <b id="clock"></b>
+                    </div>
+                </div>
+                <div class="card-body">
+                       <div class="row row-cols-2 g-0 mb-4">
+                        <div class="col">
+                            <h5 class="text-center fw-bold mb-4" style="color: #9c3327">
+                                Most Selected Languages
+                            </h5>
+                            <div class="row row-cols-3 g-3">
+                                {% for language in language_serializer %}
+                                <div class="col">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <img src="{{language.image}}" class="lang-img">
+                                                </div>
+                                                <div class="col d-flex align-items-center justify-content-center">
+                                                    <b id="arabicLang">
+                                                        {{ language.language_click|sum_clicks }}
+                                                    </b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-center fw-bold" style="color: #9c3327">
+                                Emotions Statistics
+                            </h5>
+                            <div>
+                                <canvas id="emotionsChart" width="800" height="250"></canvas>
+                            </div>
+                        </div>
+                       </div>
+                    <hr>
+                    <div>
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <!-- Customer Service App -->
+                            <div class="tab-pane fade show active" id="v-pills-customer-service" role="tabpanel" aria-labelledby="v-pills-customer-service-tab" tabindex="0">
+                                <h5 class="text-center">
+                                    <b style="color: #9c3327">
+                                        Services Buttons Counter
+                                    </b>
+                                </h5>
+                                <div class="row row-cols-1 g-3">
+                                    <div class="col mt-0 mb-3">
+                                        <div class="mt-5">
+                                            <canvas id="servicesChart" width="800" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row row-cols-3 g-3">
+                                            {% for service in service_serializer %}
+                                            <div class="col">
+                                                <div class="card shadow-sm h-100"  style="border: 1px solid {{service.color_code}}">
+                                                    <div class="card-header text-center" style="background-color: {{service.color_code}}">
+                                                        <b class="text-light">
+                                                            {{service.name.capitalize}}<h3 class="mb-0">{{service.service_click|sum_clicks}}</h3>
+                                                        </b>
+                                                    </div>
+                                                    {% if service.option %}
+                                                    <div class="card-body p-3">
+                                                        <div class="row g-2">
+                                                            {% for option in service.option %}
+                                                            <div class="col-auto">
+                                                                <div class="card shadow-sm" style="border: 1px solid {{option.color_code}}">
+                                                                    <div class="card-body p-2">
+                                                                        <div class="d-flex justify-content-between">
+                                                                        <small>
+                                                                                <span class="me-2">
+                                                                                    {{option.name.capitalize}}
+                                                                                </span>
+                                                                                <b id="serviceOne">
+                                                                                    {{option.option_click|sum_clicks}}
+                                                                                </b>
+                                                                        </small>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    {% else %}
+                                                        <div class="card-body p-3">
+                                                            <h6 class="text-center">
+                                                                Inner options will be a user interaction with the robot
+                                                            </h6>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-instructor" role="tabpanel" aria-labelledby="v-pills-instructor-tab" tabindex="0">
+                                <section>
+                                    <h4 class="text-center">
+                                        <b style="color: #9c3327">
+                                            Courses Statistics
+                                        </b>
+                                    </h4>
+                                    <br>
+                                    {% for course in course_serializer %}
+                                        <div class="d-flex align-items-baseline">
+                                            <h5 class="me-2">
+                                                <b class="text-capitalize" style="color: {{course.color_code}}">
+                                                    {{course.name}} -
+                                                </b>
+                                            </h5>
+                                            <h5 class="mb-0">
+                                                <b id="courseCounter" style="color: {{course.color_code}}">
+                                                    {{course.course_click|sum_clicks}}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <br>
+                                        <div class="row g-3">
+                                           <div class="col">
+                                            <div class="row g-3">
+                                                {% for topic in course.topic %}
+                                                    <div class="col-auto">
+                                                        <b class="badge position-relative text-capitalize" style="background-color: {{topic.color_code}}; font-size: 14px">
+                                                            {{topic.name}}
+                                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" id="chapterOne">
+                                                            {{topic.topic_click|sum_clicks}}
+                                                            </span>
+                                                        </b>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                           </div>
+                                           <div class="col">
+                                            <div>
+                                                <canvas id="{{course.id}}" width="800" height="500"></canvas>
+                                            </div>
+                                           </div>
+                                        </div>
+                                        <br>
+                                        <hr>
+                                    {% endfor %}
+                                </section>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-airport" role="tabpanel" aria-labelledby="v-pills-airport-tab" tabindex="0">
+                                <div class="row g-3">
+                                    <div class="col">
+                                        <div class="card shadow h-100">
+                                            <div class="card-body">
+                                                <h1 class="text-center">
+                                                    <i class="bi bi-airplane" style="color: #9c3327"></i>
+                                                </h1>
+                                                <h4 class="text-center mt-4">
+                                                    Flight Traffic
+                                                </h4>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h2 class="text-center" style="color: #9c3327">
+                                                            124.7K
+                                                        </h2>
+                                                        <h6 class="text-center">
+                                                            Arriving
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col">
+                                                        <h2 class="text-center" style="color: #9c3327">
+                                                            112.2K
+                                                        </h2>
+                                                        <h6 class="text-center">
+                                                            Departing
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card shadow h-100">
+                                            <div class="card-body">
+                                                <h1 class="text-center">
+                                                    <i class="bi bi-alarm" style="color: #9c3327"></i>
+                                                </h1>
+                                                <h4 class="text-center mt-4">
+                                                    On-time Performance
+                                                </h4>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h2 class="text-center" style="color: #9c3327">
+                                                            75%
+                                                        </h2>
+                                                        <h6 class="text-center">
+                                                            Arriving
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col">
+                                                        <h2 class="text-center" style="color: #9c3327">
+                                                            82%
+                                                        </h2>
+                                                        <h6 class="text-center">
+                                                            Departing
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card shadow h-100">
+                                            <div class="card-body">
+                                                <h1 class="text-center">
+                                                    <i class="bi bi-hand-index-thumb" style="color: #9c3327"></i>
+                                                </h1>
+                                                <h5 class="text-center mt-4">
+                                                    <b>
+                                                        Total clicks in Airport Application
+                                                    </b>
+                                                </h5>
+                                                <h6 class="text-center display-6" id="airportCounts">
+                                                    17
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <div class="row row-cols-2">
+                                    <div class="col">
+                                        <h4 class="text-center mt-3">
+                                            Arrival/Departures Numbers
+                                        </h4>
+                                        <div style="width: 500px" class="w-100">
+                                            <canvas id="airportPieChart" width="800" height="400"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h4 class="text-center mt-3">
+                                           Passengers Time Series
+                                        </h4>
+                                        <div style="width: 500px" class="w-100">
+                                            <canvas id="airportLineChart" width="800" height="400"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="{% static "js/gdrfad_api_js/dashboard.js" %}"></script>
+<script>
+        // Clock
+function updateClock() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var seconds = now.getSeconds();
+    var date = now.toDateString().replace(/ /g, ', ');
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    document.getElementById('clock').innerHTML = hours + ':' + minutes + ':' + seconds;
+    document.getElementById('date').innerHTML = date;
+} 
+setInterval(updateClock, 1000);
+updateClock();
+
+// Logic
+//var IP = '10.1.56.49:1112' 
+//var myForm = document.getElementById("myForm")
+//myForm.action = `http://${IP}/export_to_excel`
+
+
+const downloadReport = document.getElementById('downloadReport')
+let airportCounts = document.getElementById('airportCounts')
+
+function drawBarChart(chartId, xValues, yValues, barColors) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: xValues,
+            datasets: [{
+                label: 'Most Used Languages',
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        }
+    });
+}
+
+function drawPieChart(chartId, labels, data, backgroundColors) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        }
+    });
+}
+
+function drawPolarAreaChart(chartId, labels, data, backgroundColors, label) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'polarArea',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        }
+    });
+}
+
+function drawPolarAreaChart2(chartId, labels, data, backgroundColors) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'polarArea',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        }
+    });
+}
+
+function drawDoughnutChart(chartId, labels, data, backgroundColors) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        }
+    });
+}
+
+function drawLineChart(chartId, labels, data, backgroundColor, borderColor, label) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                fill: false,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 2
+            }]
+        }
+    });
+}
+
+
+function updateBarChart(chart, xValues, yValues, barColors) {
+    chart.data.labels = xValues;
+    chart.data.datasets[0].data = yValues;
+    chart.data.datasets[0].backgroundColor = barColors;
+    chart.update();
+}
+
+function updateHorizontalBarChart(chart, xValues, yValues, barColors) {
+    chart.data.labels = xValues;
+    chart.data.datasets[0].data = yValues;
+    chart.data.datasets[0].backgroundColor = barColors;
+    chart.update();
+}
+
+function updatePieChart(chart, labels, data, backgroundColors) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors;
+    chart.update();
+}
+
+function updateDoughnutChart(chart, labels, data, backgroundColors) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors;
+    chart.update();
+}
+
+function updatePolarAreaChart(chart, labels, data, backgroundColors, label) {
+    chart.data.datasets[0].label = label;
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors;
+    chart.update();
+}
+
+function updatePolarAreaChart2(chart, labels, data, backgroundColors) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors;
+    chart.update();
+}
+
+function updateLineChart(chart, labels, data, backgroundColors, label) {
+    chart.data.datasets[0].label = label;
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors;
+    chart.update();
+}
+
+const xServicesValues = [];
+const yServicesValues = [];
+const barServicesColors = [];
+{% for service in service_serializer %}
+    xServicesValues.push('{{ service.name.capitalize }}');
+    yServicesValues.push('{{service.service_click|sum_clicks}}');
+    barServicesColors.push('{{ service.color_code }}');
+{% endfor %}
+servicesChart = drawDoughnutChart('servicesChart', xServicesValues, yServicesValues, barServicesColors);
+updateDoughnutChart(servicesChart, xServicesValues, yServicesValues, barServicesColors);
+
+const xEmotionsValues = [];
+const yEmotionsValues = [];
+const barEmotionsColors = [];
+{% for emotion in emotion_serializer %}
+    xEmotionsValues.push('{{ emotion.name.capitalize }}');
+    yEmotionsValues.push('{{emotion.emotion_click|sum_clicks}}');
+    barEmotionsColors.push('{{ emotion.color_code }}');
+{% endfor %}
+emotionsChart = drawPieChart('emotionsChart', xEmotionsValues, yEmotionsValues, barEmotionsColors);
+updatePieChart(emotionsChart, xEmotionsValues, yEmotionsValues, barEmotionsColors);
+
+
+{% for course in course_serializer %}
+    const xInstrucrtorValues_{{course.id}} = [];
+    const yInstrucrtorValues_{{course.id}} = [];
+    const barInstrucrtorColors_{{course.id}} = [];
+    {% for topic in course.topic %}
+    xInstrucrtorValues_{{course.id}}.push('{{ topic.name.capitalize }}');
+    yInstrucrtorValues_{{course.id}}.push('{{topic.topic_click|sum_clicks}}');
+    barInstrucrtorColors_{{course.id}}.push('{{ topic.color_code }}');
+    {% endfor %}
+    instructorChart = drawPolarAreaChart('{{course.id}}', xInstrucrtorValues_{{course.id}}, yInstrucrtorValues_{{course.id}}, barInstrucrtorColors_{{course.id}}, 'Course');
+    updatePolarAreaChart(instructorChart, xInstrucrtorValues_{{course.id}}, yInstrucrtorValues_{{course.id}}, barInstrucrtorColors_{{course.id}}, 'course');
+{% endfor %}
+
+const xAirportValues = ['Arrivals', 'Departures'];
+const yAirportValues = [10, 4];
+const barAirportColors = ['#20c997', '#ffc107'];
+airportPieChart = drawPieChart('airportPieChart', xAirportValues, yAirportValues, barAirportColors);
+
+
+const xAirportValuesLine = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const yAirportValuesLine = [1200, 420, 1470, 160, 1840, 200, 920, 540, 760, 2020, 300, 820];
+const barAirportColorsLine = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107', '#198754', '#20c997', '#0dcaf0', '#adb5bd', '#000'];
+airportLineChart = drawLineChart('airportLineChart', xAirportValuesLine, yAirportValuesLine, barAirportColorsLine);
+
+</script>
+<body>
+{% endblock content %}

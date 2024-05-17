@@ -1,0 +1,52 @@
+{% extends "index.html" %}
+{% load rest_framework %}
+{% load custom_filters  %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <div class="card shadow mt-5 col-md-6 offset-md-3 border-0">
+        <div class="card-header">
+            <h2 class="text-center mb-0 fw-bold text-light">Logout</h2>
+        </div>
+        <div class="card-body">
+            <form id="logout-form" method="post">
+                {% csrf_token %}
+                <div class="p-3 ps-1">
+                    <h5>
+                        Are you sure you want to <b>Logout</b>?
+                    </h5>
+                </div>
+                <button type="submit" class="btn btn-danger fw-bold col-12">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('logout-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        fetch("{% url 'auth_api:custom_token_destroy_view' %}", {
+            method: 'POST',
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to the login page after successful logout
+                window.location.href = "{% url 'auth_api:custom_token_create_view' %}";
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            // Handle any error response here if needed
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+{% endblock %}
