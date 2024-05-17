@@ -1,1 +1,1 @@
-# robots_api
+<img src="media/images/ata.png" alt="Action To Action Robotics & AI Logo" style="width: 100%;">
