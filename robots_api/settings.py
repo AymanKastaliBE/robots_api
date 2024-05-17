@@ -31,7 +31,13 @@ SECRET_KEY = 'django-insecure-6@*hcb&t1tbq%ajg#!fz&usdp$v-7vs#j+vji&l9es*)dnpses
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "actiontoaction.dev",
+    "www.actiontoaction.dev",
+    "203.161.44.115:22786",
+    "203.161.44.115:22786:8000",
+]
 
 
 # Application definition
