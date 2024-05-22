@@ -15,8 +15,8 @@ import datetime
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import pymysql
-pymysql.install_as_MySQLdb()
+# import pymysql
+# pymysql.install_as_MySQLdb()
 
 load_dotenv()
 
@@ -149,7 +149,7 @@ WSGI_APPLICATION = 'robots_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
