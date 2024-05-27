@@ -92,8 +92,18 @@ REST_FRAMEWORK = {
             'rest_framework.permissions.IsAuthenticated',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
     ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # 'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 }
 
 DJOSER = {
@@ -103,19 +113,28 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL': False,
     'SERIALIZERS': {},
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
 }
 
-SESSION_COOKIE_SECURE = True
+# DJOSER = {
+#     'SEND_ACTIVATION_EMAIL': False,
+#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': 'activate/{uid}/{token}',
+#     'SEND_CONFIRMATION_EMAIL': False,
+#     'SERIALIZERS': {},
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
+# }
+
+# SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_AGE = 1209600  # Two weeks
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-TOKEN_EXPIRATION_TIME = 1209600  # Default token expiration time in seconds (e.g., 1 hour)
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 
-SIGNUP_URL_GET = "auth_api:user_create_view"
-SIGNUP_URL_POST = "auth_api:custom_user_viewset_view"
-LOGIN_URL = "auth_api:custom_token_create_view"
+SIGNUP_URL_GET = "auth_api:custom_signup_view"
+SIGNUP_URL_POST = "auth_api:custom_user_registration_view"
+LOGIN_URL_GET = "auth_api:custom_login_view"
+LOGIN_URL_POST = "auth_api:custom_jwt_token_create_view"
 LOGOUT_URL = "auth_api:custom_token_destroy_view"
 
 USER_PROFILE_URL = "ata_api:user_profile_view"

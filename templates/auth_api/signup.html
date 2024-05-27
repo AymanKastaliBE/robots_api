@@ -48,7 +48,7 @@
         })
         .then(data => {
             if(data){
-                window.location.href = "{% url LOGIN_URL %}";
+                window.location.href = "{% url LOGIN_URL_GET %}";
             }
         })
         .catch(error => {

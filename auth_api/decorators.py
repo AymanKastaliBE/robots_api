@@ -9,7 +9,7 @@ def login_required(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             # return redirect(reverse("auth_api:custom_token_create_view"))
-            login_url = settings.LOGIN_URL
+            login_url = settings.LOGIN_URL_GET
             return redirect(reverse(login_url))
         return view_func(request, *args, **kwargs)
     return wrapper
