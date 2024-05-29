@@ -9,9 +9,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('authentication/', include(('auth_api.urls', 'auth_api'), namespace='auth_api')),
     path('api/', include(('gdrfad_api.urls', 'gdrfad_api'), namespace='gdrfad_api')),
-    re_path(r'^auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
-    re_path(r'^auth/', include('djoser.urls.jwt')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.jwt')),
 ]
 
 if settings.DEBUG:

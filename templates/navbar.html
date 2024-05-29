@@ -29,6 +29,15 @@
                 <ul class="dropdown-menu dropdown-menu-end nav-dropdown">
                     {% if request.user.is_authenticated %}
                     <li>
+                      <a class="dropdown-item" href="{% url 'ata_api:user_profile_view' %}">
+                        <i class="bi bi-person pe-1"></i>
+                        <b>
+                          Profile
+                        </b>
+                      </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
                       <a class="dropdown-item" href="{% url 'auth_api:custom_token_destroy_view' %}">
                         <i class="bi bi-box-arrow-left pe-1"></i>
                         <b>

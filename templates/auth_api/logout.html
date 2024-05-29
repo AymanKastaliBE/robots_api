@@ -36,7 +36,7 @@
         .then(response => {
             if (response.ok) {
                 // Redirect to the login page after successful logout
-                window.location.href = "{% url 'auth_api:custom_token_create_view' %}";
+                window.location.href = "{% url 'auth_api:custom_login_view' %}";
             } else {
                 return response.json();
             }

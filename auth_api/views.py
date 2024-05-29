@@ -18,6 +18,8 @@ from djoser.serializers import UserCreateSerializer
 from . import serializers as auth_serializers
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.sessions.models import Session
 
 
 User = get_user_model()
@@ -67,7 +69,7 @@ custom_login_view = CustomLoginView.as_view()
 
 
 class CustomJWTTokenObtainPairView(TokenObtainPairView):
-    serializer_class = TokenObtainPairSerializer
+    # serializer_class = TokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
@@ -83,6 +85,13 @@ class CustomJWTTokenObtainPairView(TokenObtainPairView):
         response.set_cookie('access_token', access_token, expires=access_token_expiration, httponly=True)
         response.set_cookie('refresh_token', str(refresh_token), expires=refresh_token_expiration, httponly=True)
 
+        # Obtain the user
+        # user = authenticate(request, username=request.data['username'], password=request.data['password'])
+
+        # # Log in the user
+        # if user is not None:
+        #     login(request, user)
+
         # Customize response data if necessary
         response.data['custom_field'] = 'Custom value'
 
@@ -91,7 +100,38 @@ class CustomJWTTokenObtainPairView(TokenObtainPairView):
 custom_jwt_token_create_view = CustomJWTTokenObtainPairView.as_view()
 
 
+class CustomTokenDestroyView(views.APIView):
+    template_name = 'auth_api/logout.html'
 
+    def get(self, request, *args, **kwargs):
+        return render(request, template_name=self.template_name)
+
+    def post(self, request):
+        try:
+            access_token = request.COOKIES.get('access_token')
+            refresh_token = request.COOKIES.get('refresh_token')
+            
+            print("Access Token:", access_token)
+            print("Refresh Token:", refresh_token)
+
+            # Delete the cookies
+            response = Response({'message': 'Logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+            
+            access_token = request.COOKIES.get('access_token')
+            refresh_token = request.COOKIES.get('refresh_token')
+            
+            print("Access Token:", access_token)
+            print("Refresh Token:", refresh_token)
+
+            # Redirect to login page
+            return response
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+custom_token_destroy_view = CustomTokenDestroyView.as_view()
  
 
 # class CustomTokenCreateView(TokenCreateView):
@@ -124,34 +164,3 @@ custom_jwt_token_create_view = CustomJWTTokenObtainPairView.as_view()
 #             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
 # custom_token_create_view = CustomTokenCreateView.as_view()
-
-
-class CustomTokenDestroyView(views.APIView):
-    permission_classes = djoser_settings.PERMISSIONS.token_destroy
-    template_name = 'auth_api/logout.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, template_name=self.template_name)
-
-    def post(self, request):
-        if 'auth_token' in request.COOKIES:
-            auth_token = request.COOKIES.get('auth_token')
-
-            try:
-                token = Token.objects.get(key=auth_token)
-                token.delete()
-            except Token.DoesNotExist:
-                pass
-
-            utils.logout_user(request)
-            response = Response({'message': 'logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
-            response.delete_cookie('auth_token')
-            
-            login_url = reverse_lazy('login')
-            response['Location'] = login_url
-            logout(request)
-            return response
-
-        return Response({'error': 'No auth token found in cookies'}, status=status.HTTP_400_BAD_REQUEST)
-
-custom_token_destroy_view = CustomTokenDestroyView.as_view()
