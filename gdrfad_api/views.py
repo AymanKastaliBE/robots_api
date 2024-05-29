@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import datetime
@@ -11,6 +11,8 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment, Font
 import pandas as pd
+from rest_framework import status, authentication
+from . import serializers as gdrfad_serializers
 
 class DashboardView(APIView):
     template_name = 'gdrfad_api/dashboard.html'
@@ -121,3 +123,50 @@ class DashboardView(APIView):
         return response
 
 dashboard_view = DashboardView.as_view()
+
+
+class IncrementRobotOptions(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [AllowAny]
+    
+    def patch(self, request, *args, **kwargs):
+        
+        key = request.data.get('key')
+        value = request.data.get('value')
+            
+        if key == 'service':
+            service = get_object_or_404(models.Service, name=value)
+            service_click = get_object_or_404(models.ServiceClick, service=service)
+            service_click.click += 1
+            service_click.save()
+        if key == 'option':
+            option = get_object_or_404(models.Option, name=value)
+            option_click = get_object_or_404(models.OptionClick, option=option)
+            option_click.click += 1
+            option_click.save()
+        if key == 'course':
+            course = get_object_or_404(models.Course, name=value)
+            course_click = get_object_or_404(models.CourseClick, course=course)
+            course_click.click += 1
+            course_click.save()
+        if key == 'topic':
+            topic = get_object_or_404(models.Topic, name=value)
+            topic_click = get_object_or_404(models.TopicClick, topic=topic)
+            topic_click.click += 1
+            topic_click.save()
+        if key == 'emotion':
+            emotion = get_object_or_404(models.Emotion, name=value)
+            emotion_click = get_object_or_404(models.EmotionClick, emotion=emotion)
+            emotion_click.click += 1
+            emotion_click.save()
+        if key == 'language':
+            language = get_object_or_404(models.Language, name=value)
+            language_click = get_object_or_404(models.LanguageClick, language=language)
+            language_click.click += 1
+            language_click.save()
+    
+        print("Request data:", request.data)
+        return Response({"message": "patch working"})
+    
+    
+increment_robot_options_view = IncrementRobotOptions.as_view()

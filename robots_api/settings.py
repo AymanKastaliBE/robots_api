@@ -41,6 +41,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "127.0.0.1:8000",
+    "192.168.0.131",
 ]
 
 
@@ -70,6 +71,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.humanize',  
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 MIDDLEWARE = [
@@ -101,16 +104,14 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=90),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
-    # 'AUTH_HEADER_TYPES': ('JWT',),
     'AUTH_HEADER_TYPES': ('Bearer',),
-    # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 }
 
 SESSION_COOKIE_AGE = 365 * 60 * 60 * 24  # 365 days in seconds
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 
 
@@ -122,27 +123,6 @@ DJOSER = {
     'SERIALIZERS': {},
     'USER_CREATE_PASSWORD_RETYPE': True,
 }
-
-# DJOSER = {
-#     'SEND_ACTIVATION_EMAIL': False,
-#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-#     'ACTIVATION_URL': 'activate/{uid}/{token}',
-#     'SEND_CONFIRMATION_EMAIL': False,
-#     'SERIALIZERS': {},
-#     'USER_CREATE_PASSWORD_RETYPE': True,
-#     'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
-# }
-
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SESSION_COOKIE_AGE = 1209600  # Two weeks
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
-
 
 
 SIGNUP_URL_GET = "auth_api:custom_signup_view"
