@@ -71,7 +71,7 @@ custom_login_view = CustomLoginView.as_view()
 
 class CustomJWTTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username', 'User')
+        # username = request.data.get('username', 'User')
         response = super().post(request, *args, **kwargs)
         # Obtain access token and refresh token from the response data
         access_token = response.data['access']
@@ -84,7 +84,7 @@ class CustomJWTTokenObtainPairView(TokenObtainPairView):
         # Create HTTP-only cookies for access and refresh tokens
         response.set_cookie('access_token', access_token, expires=access_token_expiration, httponly=True)
         response.set_cookie('refresh_token', str(refresh_token), expires=refresh_token_expiration, httponly=True)
-        response.set_cookie('username', username, expires=access_token_expiration)
+        # response.set_cookie('username', username, expires=access_token_expiration)
 
         response.data['custom_field'] = 'Custom value'
 
@@ -104,7 +104,7 @@ class CustomTokenDestroyView(views.APIView):
             response = Response({'message': 'Logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
-            response.delete_cookie('username')
+            # response.delete_cookie('username')
             return response
 
         except Exception as e:

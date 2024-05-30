@@ -13,10 +13,13 @@ from openpyxl.styles import Alignment, Font
 import pandas as pd
 from rest_framework import status, authentication
 from . import serializers as gdrfad_serializers
+from auth_api import permissions as auth_api_permissions
+
 
 class DashboardView(APIView):
     template_name = 'gdrfad_api/dashboard.html'
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny, auth_api_permissions.StaffOnly, auth_api_permissions.GDRFADOnly]
+    permission_classes = [auth_api_permissions.StaffOnly]
 
     @method_decorator(login_required, name='dispatch')
     def get(self, request, format=None, *args, **kwargs):

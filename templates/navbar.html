@@ -16,18 +16,18 @@
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {% if not request.username %}
-                  <b>
-                    Menu
+                  {% if request.user.is_authenticated %}
+                  <b class="text-capitalize">
+                    {{request.user}}
                   </b>
                   {% else %}
                   <b class="text-capitalize">
-                    {{request.username}}
+                    Menu
                   </b>
                   {% endif %}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end nav-dropdown">
-                    {% if request.username %}
+                    {% if request.user.is_authenticated %}
                     <li>
                       <a class="dropdown-item" href="{% url 'ata_api:user_profile_view' %}">
                         <i class="bi bi-person pe-1"></i>
