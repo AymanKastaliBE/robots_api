@@ -1,6 +1,6 @@
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework_simplejwt.tokens import RefreshToken
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.conf import settings as django_settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -27,6 +27,7 @@ class AttachAuthTokenMiddleware(MiddlewareMixin):
     def process_request(self, request):
         access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
+        username = request.COOKIES.get('username')
         
         is_access_token_valid = self.is_access_token_valid(access_token)
         is_refresh_token_valid = self.is_refresh_token_valid(refresh_token)
@@ -34,6 +35,7 @@ class AttachAuthTokenMiddleware(MiddlewareMixin):
         
         if access_token and is_access_token_valid:
             request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+            request.username = username
         elif not access_token or not is_access_token_valid:
             if refresh_token and is_refresh_token_valid:
                 try:
@@ -44,6 +46,7 @@ class AttachAuthTokenMiddleware(MiddlewareMixin):
                     request.access_token = access_token
                     request.access_token_expiration = access_token_expiration
                     request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+                    request.username = username
                 except TokenError as e:
                     print(f'Refresh token error: {e}')
                 except Exception as e:
@@ -53,3 +56,4 @@ class AttachAuthTokenMiddleware(MiddlewareMixin):
         if hasattr(request, 'access_token'):
             response.set_cookie('access_token', request.access_token, expires=request.access_token_expiration, httponly=True)
         return response
+    

@@ -7,7 +7,16 @@
 {% block content %}
 
 {% include 'navbar.html' %}
-<h1>
-    {{request.user.is_authenticated}}
-<h1>
+<div class="container">
+    <div class="card shadow mt-5 col-md-10 offset-md-1">
+        <div class="card-header text-light p-3">
+            <h1 class="text-center mb-0 text-capitalize">
+                welcome to action to action
+            </h1>
+        </div>
+        <div class="card-body">
+            <img src="/media/images/ata.png" alt="ATA Logo" class=" w-100">
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -18,8 +18,9 @@ from djoser.serializers import UserCreateSerializer
 from . import serializers as auth_serializers
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -69,9 +70,8 @@ custom_login_view = CustomLoginView.as_view()
 
 
 class CustomJWTTokenObtainPairView(TokenObtainPairView):
-    # serializer_class = TokenObtainPairSerializer
-
     def post(self, request, *args, **kwargs):
+        username = request.data.get('username', 'User')
         response = super().post(request, *args, **kwargs)
         # Obtain access token and refresh token from the response data
         access_token = response.data['access']
@@ -84,15 +84,8 @@ class CustomJWTTokenObtainPairView(TokenObtainPairView):
         # Create HTTP-only cookies for access and refresh tokens
         response.set_cookie('access_token', access_token, expires=access_token_expiration, httponly=True)
         response.set_cookie('refresh_token', str(refresh_token), expires=refresh_token_expiration, httponly=True)
+        response.set_cookie('username', username, expires=access_token_expiration)
 
-        # Obtain the user
-        # user = authenticate(request, username=request.data['username'], password=request.data['password'])
-
-        # # Log in the user
-        # if user is not None:
-        #     login(request, user)
-
-        # Customize response data if necessary
         response.data['custom_field'] = 'Custom value'
 
         return response
@@ -108,24 +101,10 @@ class CustomTokenDestroyView(views.APIView):
 
     def post(self, request):
         try:
-            access_token = request.COOKIES.get('access_token')
-            refresh_token = request.COOKIES.get('refresh_token')
-            
-            print("Access Token:", access_token)
-            print("Refresh Token:", refresh_token)
-
-            # Delete the cookies
             response = Response({'message': 'Logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
-            
-            access_token = request.COOKIES.get('access_token')
-            refresh_token = request.COOKIES.get('refresh_token')
-            
-            print("Access Token:", access_token)
-            print("Refresh Token:", refresh_token)
-
-            # Redirect to login page
+            response.delete_cookie('username')
             return response
 
         except Exception as e:
