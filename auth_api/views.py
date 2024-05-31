@@ -47,7 +47,7 @@ class CustomUserRegistrationView(UserViewSet):
     
     def perform_create(self, serializer):
         user = serializer.save()
-        return redirect(reverse_lazy(django_settings.LOGIN_URL))
+        return redirect(reverse_lazy(django_settings.LOGIN_URL_GET))
     
 custom_user_registration_view = CustomUserRegistrationView.as_view({'post': 'create'})
 

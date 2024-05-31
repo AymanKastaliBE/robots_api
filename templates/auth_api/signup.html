@@ -40,7 +40,6 @@
         .then(response => {
             if (!response.ok) {
                 return response.json().then(data => {
-                    console.error('data: ', data)
                     displayErrors(data);
                 });
             }
@@ -52,7 +51,6 @@
             }
         })
         .catch(error => {
-            console.error('Error:', error);
         });
     });
     function displayErrors(errors) {
