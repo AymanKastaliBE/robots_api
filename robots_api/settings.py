@@ -33,21 +33,21 @@ SECRET_KEY = 'django-insecure-6@*hcb&t1tbq%ajg#!fz&usdp$v-7vs#j+vji&l9es*)dnpses
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-# ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = [
     "actiontoaction.dev",
     "www.actiontoaction.dev",
-    "https://actiontoaction.dev",
     "203.161.44.115",
     "localhost",
     "127.0.0.1",
-    "127.0.0.1:8000",
     "192.168.0.131",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://actiontoaction.dev",
+    "https://www.actiontoaction.dev",
+]
 
 # Application definition
-
 INSTALLED_APPS = [
     "semantic_admin",
     "semantic_forms",
