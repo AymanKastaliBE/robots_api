@@ -37,6 +37,7 @@ DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = [
     "actiontoaction.dev",
     "www.actiontoaction.dev",
+    "https://actiontoaction.dev",
     "203.161.44.115",
     "localhost",
     "127.0.0.1",
