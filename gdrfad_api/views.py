@@ -20,7 +20,7 @@ class DashboardView(APIView):
     def get_excel_filename(cls, start_date, end_date):
         start_date_str = start_date.strftime("%Y-%m-%d")
         end_date_str = end_date.strftime("%Y-%m-%d")
-        filename = f"{start_date_str}_{end_date_str}.xlsx"
+        filename = f"{start_date_str}_{end_date_str}_robot_dashboard_report.xlsx"
         # Remove any characters that are not allowed in filenames
         return slugify(filename)
 
