@@ -101,45 +101,45 @@ class CustomTokenDestroyView(views.APIView):
 
     def post(self, request):
         try:
-            response = Response({'message': 'Logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
+            # Retrieve the refresh token from the cookies
+            refresh_token = request.COOKIES.get('refresh_token')
+            if not refresh_token:
+                return Response({"detail": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                # Blacklist the refresh token
+                refresh_token_obj = RefreshToken(refresh_token)
+                refresh_token_obj.blacklist()
+            except Exception as e:
+                return Response({"detail": "Invalid refresh token"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create response and delete cookies
+            response = Response({'message': 'Logged out successfully'}, status=status.HTTP_205_RESET_CONTENT)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
-            # response.delete_cookie('username')
             return response
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 custom_token_destroy_view = CustomTokenDestroyView.as_view()
- 
 
-# class CustomTokenCreateView(TokenCreateView):
-#     template_name = 'auth_api/login.html'
-    
-#     @method_decorator(protect_login_page_from_logged_in_users, name='dispatch')
+# class CustomTokenDestroyView(views.APIView):
+#     template_name = 'auth_api/logout.html'
+
 #     def get(self, request, *args, **kwargs):
-#         LOGIN_URL = django_settings.LOGIN_URL
-#         USER_PROFILE_URL = django_settings.USER_PROFILE_URL
-#         context = {
-#             'LOGIN_URL': LOGIN_URL,
-#             'USER_PROFILE_URL': USER_PROFILE_URL,
-#         }
-#         return render(request, template_name=self.template_name, context=context)
+#         return render(request, template_name=self.template_name)
 
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-        
-#         user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
-        
-#         if user:
-#             token, _ = Token.objects.get_or_create(user=user)
-#             response = Response({'auth_token': token.key}, status=status.HTTP_200_OK)
-#             response.set_cookie('auth_token', token.key, httponly=True)
-            
-#             login(request, user)
+#     def post(self, request):
+#         try:
+#             print("request: ", request.COOKIES)
+#             response = Response({'message': 'Logged out successfully'}, status=status.HTTP_204_NO_CONTENT)
+#             response.delete_cookie('access_token')
+#             response.delete_cookie('refresh_token')
+#             # response.delete_cookie('username')
 #             return response
-#         else:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-# custom_token_create_view = CustomTokenCreateView.as_view()
+
+#         except Exception as e:
+#             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+# custom_token_destroy_view = CustomTokenDestroyView.as_view()

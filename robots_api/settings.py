@@ -68,9 +68,10 @@ INSTALLED_APPS = [
     
     'djoser',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     
     'corsheaders',
-    'django.contrib.humanize',  
+    'django.contrib.humanize',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -106,13 +107,22 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_TOKENS': True,
+    'SIGNING_KEY': os.getenv("ACCESS_TOKEN_SECRET"),
+    'REFRESH_TOKEN_SIGNING_KEY': os.getenv("REFRESH_TOKEN_SECRET"),
 }
 
 SESSION_COOKIE_AGE = 365 * 60 * 60 * 24  # 365 days in seconds
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
+# make these True when push to Production
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+# end make these True when push to Production
+
 CSRF_COOKIE_SAMESITE = 'Lax'
 
 
