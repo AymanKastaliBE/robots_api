@@ -1,3 +1,5 @@
+{% load custom_tags %}
+
 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand fw-bold" href="{% url 'ata_api:home_page_view' %}">Action To Action</a>
@@ -9,9 +11,11 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'ata_api:home_page_view' %}">Homepage</a>
           </li>
+          {% if request.user|user_in_group:"Staff,GDRFAD" %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'gdrfad_api:dashboard_view' %}">GDRFAD Dashboard</a>
           </li>
+          {% endif %}
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
