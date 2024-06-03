@@ -20,3 +20,15 @@ class GDRFADOnly(BasePermission):
             login_url = settings.LOGIN_URL_GET
             return redirect(reverse(login_url))
         return request.user.groups.filter(name='GDRFAD').exists()
+    
+    
+class GDRFADOnlyOrStaffOnly(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            login_url = settings.LOGIN_URL_GET
+            return redirect(reverse(login_url))
+        
+        return (
+            request.user.groups.filter(name='Staff').exists() or
+            request.user.groups.filter(name='GDRFAD').exists()
+        )

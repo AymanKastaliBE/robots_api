@@ -8,13 +8,13 @@ from auth_api.decorators import login_required
 from django.utils.decorators import method_decorator
 import pandas as pd
 from rest_framework import  authentication
-from auth_api.permissions import StaffOnly, GDRFADOnly
+from auth_api.permissions import GDRFADOnlyOrStaffOnly
 from django.utils.text import slugify
 
 
 class DashboardView(APIView):
     template_name = 'gdrfad_api/dashboard.html'
-    permission_classes = [GDRFADOnly or StaffOnly]
+    permission_classes = [GDRFADOnlyOrStaffOnly]
 
     @classmethod
     def get_excel_filename(cls, start_date, end_date):
