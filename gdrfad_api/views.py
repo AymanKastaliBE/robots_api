@@ -14,7 +14,7 @@ from django.utils.text import slugify
 
 class DashboardView(APIView):
     template_name = 'gdrfad_api/dashboard.html'
-    permission_classes = [StaffOnly or GDRFADOnly]
+    permission_classes = [GDRFADOnly or StaffOnly]
 
     @classmethod
     def get_excel_filename(cls, start_date, end_date):
