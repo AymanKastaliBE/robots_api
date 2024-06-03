@@ -1,7 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 :root{
     --ata-blue-color: #0272bb;
+    --ata-blue-color-darker: #0066aa;
     --ata-gray-color: #86878b;
     --ata-blue-color-dark: #003f68;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Nunito", sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
 }
 
 *{
@@ -18,10 +32,18 @@
     background-color: var(--ata-blue-color-dark);
 }
 
-.navbar{
+.navbar, footer{
     background-color: var(--ata-blue-color);
 }
 
 .nav-dropdown{
     background-color: var(--ata-blue-color-dark);
+}
+
+.footer-icon{
+    font-size: 25px;
+}
+
+.footer-bottom{
+    background-color: var(--ata-blue-color-darker);
 }
