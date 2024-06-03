@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime
+from datetime import datetime, timezone
 from . import models, serializers
 from auth_api.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -245,41 +245,77 @@ dashboard_view = DashboardView.as_view()
 
 class IncrementRobotOptions(APIView):
     authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [AllowAny]
     
     def patch(self, request, *args, **kwargs):
         
         key = request.data.get('key')
         value = request.data.get('value')
+        today = timezone.now().date()
             
         if key == 'service':
             service = get_object_or_404(models.Service, name=value)
-            service_click = get_object_or_404(models.ServiceClick, service=service)
+            # service_click = get_object_or_404(models.ServiceClick, service=service)
+            # service_click.click += 1
+            service_click, _ = models.ServiceClick.objects.get_or_create(
+                service=service,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             service_click.click += 1
             service_click.save()
         if key == 'option':
             option = get_object_or_404(models.Option, name=value)
-            option_click = get_object_or_404(models.OptionClick, option=option)
+            # option_click = get_object_or_404(models.OptionClick, option=option)
+            # option_click.click += 1
+            option_click, _ = models.OptionClick.objects.get_or_create(
+                option=option,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             option_click.click += 1
             option_click.save()
         if key == 'course':
             course = get_object_or_404(models.Course, name=value)
-            course_click = get_object_or_404(models.CourseClick, course=course)
+            # course_click = get_object_or_404(models.CourseClick, course=course)
+            # course_click.click += 1
+            course_click, _ = models.CourseClick.objects.get_or_create(
+                course=course,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             course_click.click += 1
             course_click.save()
         if key == 'topic':
             topic = get_object_or_404(models.Topic, name=value)
-            topic_click = get_object_or_404(models.TopicClick, topic=topic)
+            # topic_click = get_object_or_404(models.TopicClick, topic=topic)
+            # topic_click.click += 1
+            topic_click, _ = models.TopicClick.objects.get_or_create(
+                topic=topic,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             topic_click.click += 1
             topic_click.save()
         if key == 'emotion':
             emotion = get_object_or_404(models.Emotion, name=value)
-            emotion_click = get_object_or_404(models.EmotionClick, emotion=emotion)
+            # emotion_click = get_object_or_404(models.EmotionClick, emotion=emotion)
+            # emotion_click.click += 1
+            emotion_click, _ = models.EmotionClick.objects.get_or_create(
+                emotion=emotion,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             emotion_click.click += 1
             emotion_click.save()
         if key == 'language':
             language = get_object_or_404(models.Language, name=value)
-            language_click = get_object_or_404(models.LanguageClick, language=language)
+            # language_click = get_object_or_404(models.LanguageClick, language=language)
+            # language_click.click += 1
+            language_click, _ = models.LanguageClick.objects.get_or_create(
+                language=language,
+                created_at=today,
+                defaults={'click': 0}
+            )            
             language_click.click += 1
             language_click.save()
     
