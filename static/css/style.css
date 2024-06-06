@@ -3,7 +3,7 @@
 :root{
     --ata-blue-color: #0272bb;
     --ata-blue-color-darker: #0066aa;
-    --ata-gray-color: #86878b;
+    --ata-gray-color: #90908f;
     --ata-blue-color-dark: #003f68;
 }
 
@@ -29,21 +29,21 @@ body {
 }
 
 .card-header{
-    background-color: var(--ata-blue-color-dark);
-}
-
-.navbar, footer{
     background-color: var(--ata-blue-color);
 }
 
-.nav-dropdown{
-    background-color: var(--ata-blue-color-dark);
-}
+/* .navbar, footer{
+    background-color: var(--ata-blue-color);
+} */
+
+/* .nav-dropdown{
+    background-color: var(--ata-gray-color);
+} */
 
 .footer-icon{
     font-size: 25px;
 }
 
-.footer-bottom{
+/* .footer-bottom{
     background-color: var(--ata-blue-color-darker);
-}
+} */

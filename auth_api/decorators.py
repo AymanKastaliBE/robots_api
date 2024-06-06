@@ -23,3 +23,16 @@ def protect_login_page_from_logged_in_users(view_func):
             return redirect(reverse(user_profile_url))
         return view_func(request, *args, **kwargs)
     return wrapper
+
+
+def allow_user_in_groups(groups=[]):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            if request.user.groups.filter(name__in=groups).exists():
+                return view_func(request, *args, **kwargs)
+            else:
+                user_profile_url = settings.USER_PROFILE_URL
+                return redirect(reverse(user_profile_url))
+        return wrapper
+    return decorator

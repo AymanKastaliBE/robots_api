@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<div class="container">
+    <section class="balance-section mt-4">
+        <h1 class="fw-bold text-center">
+            Balance: <span class="text-success">+500</span> <small>AED</small>
+        </h1>
+    </section>
+</div>
+{% endblock %}

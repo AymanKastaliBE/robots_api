@@ -7,6 +7,7 @@ defusedxml==0.8.0rc2
 Django==4.2
 django-cors-headers==4.3.1
 django-filter==24.2
+django-phonenumber-field==7.3.0
 django-semantic-admin==0.5.0
 django-semantic-forms==0.1.5
 django-templated-mail==1.1.1
@@ -21,6 +22,7 @@ numpy==1.26.4
 oauthlib==3.2.2
 openpyxl==3.1.2
 pandas==2.2.2
+phonenumbers==8.13.38
 pillow==10.3.0
 psycopg2==2.9.9
 pycparser==2.22
