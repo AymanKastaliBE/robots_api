@@ -72,6 +72,8 @@ INSTALLED_APPS = [
     
     'corsheaders',
     'django.contrib.humanize',
+    
+    "phonenumber_field",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
