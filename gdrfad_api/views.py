@@ -34,20 +34,24 @@ class DashboardView(APIView):
             start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
             end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
             
-            languages = models.Language.objects.filter(language_click__created_at__range=[start_date, end_date]).distinct()
-            emotions = models.Emotion.objects.filter(emotion_click__created_at__range=[start_date, end_date]).distinct()
-            services = models.Service.objects.filter(service_click__created_at__range=[start_date, end_date]).distinct()
-            courses = models.Course.objects.filter(course_click__created_at__range=[start_date, end_date]).distinct()
+            languages = models.Language.objects.all()
+            emotions = models.Emotion.objects.all()
+            services = models.Service.objects.all()
+            courses = models.Course.objects.all()
+            language_serializer = serializers.LanguageSerializer(languages, many=True, context={'start_date': start_date, 'end_date': end_date})
+            emotion_serializer = serializers.EmotionSerializer(emotions, many=True, context={'start_date': start_date, 'end_date': end_date})
+            service_serializer = serializers.ServiceSerializer(services, many=True, context={'start_date': start_date, 'end_date': end_date})
+            course_serializer = serializers.CourseSerializer(courses, many=True, context={'start_date': start_date, 'end_date': end_date})
         else:
             languages = models.Language.objects.all()
             emotions = models.Emotion.objects.all()
             services = models.Service.objects.all()
             courses = models.Course.objects.all()
             
-        language_serializer = serializers.LanguageSerializer(languages, many=True)
-        emotion_serializer = serializers.EmotionSerializer(emotions, many=True)
-        service_serializer = serializers.ServiceSerializer(services, many=True)
-        course_serializer = serializers.CourseSerializer(courses, many=True)
+            language_serializer = serializers.LanguageSerializer(languages, many=True)
+            emotion_serializer = serializers.EmotionSerializer(emotions, many=True)
+            service_serializer = serializers.ServiceSerializer(services, many=True)
+            course_serializer = serializers.CourseSerializer(courses, many=True)
         
         context['language_serializer'] = language_serializer.data
         context['emotion_serializer'] = emotion_serializer.data
@@ -57,7 +61,6 @@ class DashboardView(APIView):
         if format == 'json':
             return Response(context)
         elif action == 'download_report':
-            # Generate Excel report and return response
             excel_filename = self.get_excel_filename(start_date, end_date)
             excel_file_response = self.generate_excel_report(context, excel_filename)
             return excel_file_response
@@ -152,7 +155,7 @@ class IncrementRobotOptions(APIView):
             model, click_model, field_name = model_mapping[key]
             instance = get_object_or_404(model, name=value)
             filter_kwargs = {field_name: instance, 'created_at': today}
-            click_instance, created = click_model.objects.get_or_create(
+            click_instance, _ = click_model.objects.get_or_create(
                 defaults={'click': 0},
                 **filter_kwargs
             )
