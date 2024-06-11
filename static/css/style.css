@@ -30,6 +30,7 @@ body {
 
 .card-header{
     background-color: var(--ata-blue-color);
+    color: white;
 }
 
 /* .navbar, footer{

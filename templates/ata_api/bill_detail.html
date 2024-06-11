@@ -1,0 +1,72 @@
+{% extends "index.html" %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<div class="ps-4 pe-4 mb-2">
+   <nav class="bills-nav mt-4 d-flex justify-content-between align-items-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="link-offset-1 link-underline link-underline-opacity-50" href="{% url 'ata_api:home_page_view' %}">Home</a></li>
+            <li class="breadcrumb-item"><a class="link-offset-1 link-underline link-underline-opacity-50" href="{% url 'ata_api:bill_list_view' %}">Bills</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{bill.id}}</li>
+            </ol>
+        </nav>
+   </nav>
+</div>
+<div class="container">
+    <section class="bill-detail">
+        <div class="card shadow">
+            <div class="card-header bg-transparent text-dark d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 p-2 fw-bold">
+                    Bill Details
+                </h3>
+                <div>
+                   <a class="btn btn-outline-primary fw-bold" href="{% url 'ata_api:bill_update_view' bill.id %}"><i class="bi bi-pencil-square"></i> Update</a>
+                   <a class="btn btn-outline-danger fw-bold" href="{% url 'ata_api:bill_delete_view' bill.id %}"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span>ID:</span><b> {{bill.id}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Date:</span><b> {{bill.issued_at|date:"m/d/Y"}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Staff Name:</span><b> {{bill.staff.name}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Supplier Name:</span><b> {{bill.supplier_name}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Invoice Number:</span><b> {{bill.invoice_number}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Transaction Number:</span><b> {{bill.transaction_number}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Vat:</span><b> {{bill.vat}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Total Amount:</span><b> {{bill.total_amount}}</b>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Remark:</span><b> {{bill.remark}}</b>
+                    </li>
+                    {% if bill.scanned_pdf %}
+                    <li class="list-group-item">
+                        <span>PDF Link:</span> <a class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">Scanned PDF Link</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+   
+{% endblock %}

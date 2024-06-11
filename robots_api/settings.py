@@ -74,9 +74,17 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     
     "phonenumber_field",
+    
+    "crispy_forms",
+    "crispy_bootstrap5",
+    
+    'django_filters',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
 MIDDLEWARE = [
@@ -121,8 +129,8 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 # make these True when push to Production
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 # end make these True when push to Production
 
 CSRF_COOKIE_SAMESITE = 'Lax'
