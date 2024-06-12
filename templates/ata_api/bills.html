@@ -1,4 +1,5 @@
 {% extends "index.html" %}
+{% load ata_api_extras %}
 {% load static %}
 {% load humanize %}
 {% load crispy_forms_tags %}
@@ -21,7 +22,7 @@
                 </h4>
             {% elif balance.value and balance.value < 0 %}
                 <h4 class="fw-bold text-center">
-                    <small>Balance:</small> <span class="text-danger">-{{balance}}</span> <small>AED</small>
+                    <small>Balance:</small> <span class="text-danger">{{balance}}</span> <small>AED</small>
                 </h4>
             {% else %}
                 <h4 class="fw-bold text-center">
@@ -48,6 +49,7 @@
                 <th scope="col">Supplier Name</th>
                 <th scope="col">Invoice Num.</th>
                 <th scope="col">Transaction Num.</th>
+                <th scope="col">Amount</th>
                 <th scope="col">Vat</th>
                 <th scope="col">Total Amount</th>
                 <th scope="col">Remarks</th>
@@ -67,12 +69,13 @@
                         <td>{{bill.supplier_name}}</td>
                         <td>{{bill.invoice_number}}</td>
                         <td>{{bill.transaction_number}}</td>
+                        <td><b>{{ bill.amount }}</b></td>
                         <td><b>{{bill.vat}}</b></td>
-                        <td><b>{{bill.total_amount}}</b></td>
+                        <td><b>{{bill.amount|calculate_total_amount:bill.vat}}</b></td>
                         <td><b>{{bill.remark}}</b></td>
                         {% if bill.scanned_pdf %}
                         <td>
-                            <a class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">View PDF</a>
+                            <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">View PDF</a>
                         </td>
                         {% else %}
                         <td>

@@ -8,7 +8,7 @@ admin.site.register(models.Staff, StaffAdmin)
 
 
 class BillAdmin(admin.ModelAdmin):
-    list_display = ["id", "staff", "issued_at", "total_amount", "scanned_pdf"]
+    list_display = ["id", "staff", "issued_at", "amount", "scanned_pdf"]
 
 admin.site.register(models.Bill, BillAdmin)
 

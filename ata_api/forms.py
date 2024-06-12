@@ -30,7 +30,7 @@ class BillForm(forms.ModelForm):
                     css_class='row'
                 ),
                  Row(
-                    Column('total_amount', css_class='col-md-4'),
+                    Column('amount', css_class='col-md-4'),
                     Column('remark', css_class='col-md-4'),
                     Column('scanned_pdf', css_class='col-md-4'),
                     css_class='row'

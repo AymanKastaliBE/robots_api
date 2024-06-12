@@ -25,7 +25,7 @@ class Bill(models.Model):
     invoice_number = models.CharField(max_length=128, blank=True, null=True)
     transaction_number = models.CharField(max_length=128, blank=True, null=True)
     vat = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
-    total_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
+    amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
     remark = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
     scanned_pdf = models.FileField(upload_to='docs/', blank=True, null=True)
     
@@ -38,6 +38,7 @@ class Bill(models.Model):
     
 class Balance(models.Model):
     value = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
+    # updated_value = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
     
     def __str__(self):
