@@ -4,12 +4,18 @@ from .models import Bill, Balance
 
 @receiver(post_save, sender=Bill)
 def update_balance_on_save(sender, instance, created, **kwargs):
-    subtract_from_balance(instance.amount + instance.vat)
-
+    if instance.type == 'expense':
+        subtract_from_balance(instance.amount + instance.vat)
+    elif instance.type == 'recharge':
+        add_to_balance(instance.amount)
 
 @receiver(post_delete, sender=Bill)
 def update_balance_on_delete(sender, instance, **kwargs):
-    add_to_balance(instance.amount + instance.vat)
+    if instance.type == 'expense':
+        add_to_balance(instance.amount + instance.vat)
+    elif instance.type == 'recharge':
+        subtract_from_balance(instance.amount)
+    
 
 
 @receiver(pre_save, sender=Bill)
@@ -20,13 +26,13 @@ def update_balance_on_update(sender, instance, **kwargs):
         return
 
     old_total = old_instance.amount + old_instance.vat
-    new_total = instance.amount + instance.vat
-    balance_change = new_total - old_total
-    print('old_total: ', old_total)
-    print('new_total: ', new_total)
-    print('balance_change: ', balance_change)
-
-    add_to_balance(old_total)
+    # new_total = instance.amount + instance.vat
+    # balance_change = new_total - old_total
+    
+    if instance.type == 'expense':
+        add_to_balance(old_total)
+    elif instance.type == 'recharge':
+        subtract_from_balance(old_instance.amount)
 
 
 def subtract_from_balance(amount):

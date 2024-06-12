@@ -18,7 +18,16 @@ class Staff(models.Model):
 
 
 class Bill(models.Model):
+    EXPENSE = 'expense'
+    RECHARGE = 'recharge'
+    
+    TYPE_CHOICES = [
+        (EXPENSE, 'Expense'),
+        (RECHARGE, 'Recharge'),
+    ]
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=EXPENSE, null=True)
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     issued_at = models.DateField(blank=True, null=True)
     supplier_name = models.CharField(max_length=256, blank=True, null=True)

@@ -52,6 +52,7 @@
                 <th scope="col">Amount</th>
                 <th scope="col">Vat</th>
                 <th scope="col">Total Amount</th>
+                <th scope="col">Cash Received</th>
                 <th scope="col">Remarks</th>
                 <th scope="col">PDF Link</th>
               </tr>
@@ -65,28 +66,55 @@
                             </a>
                         </th>
                         <td>{{bill.issued_at|date:"d/m/Y"}}</td>
-                        <td>{{bill.staff}}</td>
-                        <td>{{bill.supplier_name}}</td>
-                        <td>{{bill.invoice_number}}</td>
-                        <td>{{bill.transaction_number}}</td>
-                        <td><b>{{ bill.amount }}</b></td>
-                        <td><b>{{bill.vat}}</b></td>
-                        <td><b>{{bill.amount|calculate_total_amount:bill.vat}}</b></td>
-                        <td><b>{{bill.remark}}</b></td>
-                        {% if bill.scanned_pdf %}
-                        <td>
-                            <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">View PDF</a>
-                        </td>
-                        {% else %}
-                        <td>
-                            <span class="text-danger">
-                                No PDF
-                            </span>
-                        </td>
+                        {% if bill.type == 'expense' %}
+                            <td>{{bill.staff}}</td>
+                            <td>{{bill.supplier_name}}</td>
+                            <td>{{bill.invoice_number}}</td>
+                            <td>{{bill.transaction_number}}</td>
+                            <td class="fw-bold">{{ bill.amount }}</td>
+                            <td class="fw-bold">{{bill.vat}}</td>
+                            <td class="fw-bold">{{bill.amount|calculate_total_amount:bill.vat}}</td>
+                            <td>-</td>
+                            <td class="fw-bold">{{bill.remark}}</td>
+                            {% if bill.scanned_pdf %}
+                            <td>
+                                <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">View PDF</a>
+                            </td>
+                            {% else %}
+                            <td>
+                                <span class="text-danger">
+                                    No PDF
+                                </span>
+                            </td>
+                            {% endif %}
+                        {% elif bill.type == 'recharge' %}
+                            <td class="text-success fw-bold">{{bill.staff}}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="text-success fw-bold">{{ bill.amount }}</td>
+                            <td>-</td>
+                            <td>-</td>
                         {% endif %}
                     </tr>
-                {% endfor %}
-            </tbody>
+                    {% endfor %}
+                    <tr class="table-primary">
+                        <th scope="row"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2" class="fw-bold">Total Bills Amount</td>
+                        <td class="fw-bold">{{bills|calculate_filtered_amount_vat}}</td>
+                    </tr>
+                </tbody>
           </table>
 
           <nav aria-label="Pagination" style="text-align: center;">

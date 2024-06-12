@@ -18,9 +18,10 @@ class BillForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Row(
-                    Column('staff', css_class='col-md-4'),
-                    Column('issued_at', css_class='col-md-4'),
-                    Column('supplier_name', css_class='col-md-4'),
+                    Column('staff', css_class='col-md-3'),
+                    Column('type', css_class='col-md-3'),
+                    Column('issued_at', css_class='col-md-3'),
+                    Column('supplier_name', css_class='col-md-3'),
                     css_class='row'
                 ),
                 Row(
