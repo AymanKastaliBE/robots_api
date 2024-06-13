@@ -11,6 +11,8 @@ def update_balance_on_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Bill)
 def update_balance_on_delete(sender, instance, **kwargs):
+    if instance.scanned_pdf:
+        instance.scanned_pdf.delete(save=False)
     if instance.type == 'expense':
         add_to_balance(instance.amount + instance.vat)
     elif instance.type == 'recharge':
@@ -25,14 +27,15 @@ def update_balance_on_update(sender, instance, **kwargs):
     except Bill.DoesNotExist:
         return
 
+    old_instance_type = old_instance.type
     old_total = old_instance.amount + old_instance.vat
     # new_total = instance.amount + instance.vat
     # balance_change = new_total - old_total
     
-    if instance.type == 'expense':
+    if old_instance_type == 'expense':
         add_to_balance(old_total)
-    elif instance.type == 'recharge':
-        subtract_from_balance(old_instance.amount)
+    elif old_instance_type == "recharge":
+        subtract_from_balance(old_total)
 
 
 def subtract_from_balance(amount):
