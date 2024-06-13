@@ -67,11 +67,11 @@
                     </li>
                     {% if bill.scanned_pdf %}
                         <li class="list-group-item">
-                            <span>PDF Link:</span> <a class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">Scanned PDF Link</a>
+                            <span>Receipt:</span> <a class="link-offset-1 link-underline link-underline-opacity-50 fw-bold" href="{{bill.scanned_pdf.url}}">PDF Link</a>
                         </li>
                         {% else %}
                         <li class="list-group-item">
-                            <span class="text-danger">No PDF</span>
+                            <span>Receipt: <b class="text-danger">No PDF</b></span>
                         </li>
                     {% endif %}
                 </ul>

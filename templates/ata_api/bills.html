@@ -54,7 +54,7 @@
                 <th scope="col">Total Amount</th>
                 <th scope="col">Cash Received</th>
                 <th scope="col">Remarks</th>
-                <th scope="col">PDF Link</th>
+                <th scope="col">Receipt</th>
               </tr>
             </thead>
             <tbody>
@@ -78,11 +78,11 @@
                             <td class="fw-bold">{{bill.remark}}</td>
                             {% if bill.scanned_pdf %}
                             <td>
-                                <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.scanned_pdf.url}}">View PDF</a>
+                                <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50 fw-bold" href="{{bill.scanned_pdf.url}}">PDF Link</a>
                             </td>
                             {% else %}
                             <td>
-                                <span class="text-danger">
+                                <span class="text-danger fw-bold">
                                     No PDF
                                 </span>
                             </td>
@@ -101,7 +101,7 @@
                         {% endif %}
                     </tr>
                     {% endfor %}
-                    <tr class="table-primary">
+                    <tr class="table-secondary">
                         <th scope="row"></th>
                         <td></td>
                         <td></td>
@@ -111,7 +111,7 @@
                         <td></td>
                         <td colspan="2" class="fw-bold"><b>Total Bills Amount</b></td>
                         <td><b>{{bills|calculate_filtered_amount_vat}}</b></td>
-                        <td colspan="2" class="p-0"><a class="btn btn-dark col-12" href="{% url 'ata_api:bill_export_to_excel_view' %}?{{ request.GET.urlencode }}">Export to Excel</a></td>
+                        <td colspan="2" class="p-0"><a class="btn btn-success col-12 fw-bold" href="{% url 'ata_api:bill_export_to_excel_view' %}?{{ request.GET.urlencode }}">Export to Excel</a></td>
                     </tr>
                 </tbody>
           </table>
