@@ -109,10 +109,9 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2" class="fw-bold">Total Bills Amount</td>
-                        <td class="fw-bold">{{bills|calculate_filtered_amount_vat}}</td>
+                        <td colspan="2" class="fw-bold"><b>Total Bills Amount</b></td>
+                        <td><b>{{bills|calculate_filtered_amount_vat}}</b></td>
+                        <td colspan="2" class="p-0"><a class="btn btn-dark col-12" href="{% url 'ata_api:bill_export_to_excel_view' %}?{{ request.GET.urlencode }}">Export to Excel</a></td>
                     </tr>
                 </tbody>
           </table>

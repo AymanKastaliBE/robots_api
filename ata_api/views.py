@@ -5,7 +5,9 @@ from django import views as django_views
 from django.utils.decorators import method_decorator
 from auth_api import decorators as auth_decorators
 from . import models, forms, filters
-from django.views import generic
+from django.views import generic, View
+import pandas as pd
+from django.http import HttpResponse
 
 class HomepageView(django_views.View):
     template_name = 'ata_api/homepage.html'
@@ -91,3 +93,49 @@ class BillDeleteView(generic.edit.DeleteView):
     success_url = reverse_lazy('ata_api:bill_list_view')
 
 bill_delete_view = BillDeleteView.as_view()
+
+
+@method_decorator(auth_decorators.allow_user_in_groups(groups=['Staff']), name='dispatch')
+class BillExportToExcelView(View):
+    
+    def get(self, request, *args, **kwargs):
+        # Get the queryset from the filter
+        queryset = models.Bill.objects.order_by('issued_at')
+        bill_filter = filters.BillFilter(request.GET, queryset=queryset)
+        filtered_qs = bill_filter.qs
+        
+        # Convert the queryset to a DataFrame
+        data = list(filtered_qs.values(
+            'id', 'type', 'issued_at', 'staff__name', 'supplier_name',
+            'invoice_number', 'transaction_number', 'amount', 'vat', 'remark'
+        ))
+
+        df = pd.DataFrame(data)
+        
+        df.rename(columns={
+            'staff__name': 'staff name',
+            'issued_at': 'date',
+            'supplier_name': 'supplier name',
+            'invoice_number': 'invoice number',
+            'transaction_number': 'transaction number',
+            'id': 'bill ID',
+        }, inplace=True)
+        
+        df['Total Amount'] = df['vat'] + df['amount']
+        
+        df['Cash Received'] = df.apply(lambda row: row['amount'] if row['type'] == 'recharge' else None, axis=1)
+        df['amount'] = df.apply(lambda row: '' if row['type'] == 'recharge' else row['amount'], axis=1)
+        df['vat'] = df.apply(lambda row: '' if row['type'] == 'recharge' else row['vat'], axis=1)
+        df['remark'] = df.apply(lambda row: '' if row['type'] == 'recharge' else row['remark'], axis=1)
+        df['Total Amount'] = df.apply(lambda row: '' if row['type'] == 'recharge' else row['Total Amount'], axis=1)
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=bills.xlsx'
+        
+        # Use pandas to write the DataFrame to an Excel file
+        with pd.ExcelWriter(response, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Bills')
+        
+        return response
+    
+bill_export_to_excel_view = BillExportToExcelView.as_view()
