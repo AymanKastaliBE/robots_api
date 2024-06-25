@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+br,h2{
+    font-family: 'Roboto', sans-serif;
+}
+
+body{
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.heading{
+    top:-25px;
+    left: 10px;
+    position: absolute;
+}
+.use{
+    position: absolute;
+    margin-top: 600px;
+    font-size: 30px;
+    color: #f59a08;
+    text-shadow: #444444;
+    font-weight: 800;
+
+}
+.title{
+    top: 0;
+    width: 100%;
+    height: 50px;
+    max-width: 100%;
+    z-index: 1;
+    display: block;
+  
+    position: absolute;
+    background-color: #2a7ae9;
+    color: white;
+    margin: 0;
+}
+.controlls{
+    position: absolute;
+    right: 250px;
+    width: 600px;
+    margin-top: 70px;
+}
+.entry-modal{
+    border: 1px solid #444444;
+    width: 300px;
+    height: 150px;
+    margin: auto;
+    z-index: 9999;
+    position: absolute;
+    left: 50%;
+    top: 70;
+    margin-left: -150px;
+    padding: 5px;
+    color: #fff;
+    background-color: #2a7ae9;
+    text-align: center;
+    border-radius: 20px;
+}
+
+#notification{
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    color: #fff;
+    margin: 0;
+    top: 47.33px;
+    font-size: 18pt;
+    width: 100%;
+    background-color: orange;
+}
+
+
+.room-input{
+  margin-top: 10px;
+  border: none;
+  padding:5px;
+  border-radius: 5px;
+}
+
+button{
+    margin-top: 20px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.custom{
+    top:110px;
+    border-radius: 50px;
+}
+#remote-video{
+    top: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+}
+.robotside{
+    top:-60;
+    position: absolute;
+    left: 200px;
+    color: rgb(255, 146, 21);
+}
+.oprator{
+    top:50;
+    right: 55px;
+    position: absolute;
+    color: rgb(255, 169, 21);
+}
+
+#local-video{
+    top: 110;
+    width: 200;
+    object-fit: cover;
+    height: 150;
+    z-index: 1;
+    right: 15;
+    background-color: #f09b1c;
+    position: absolute;
+    border-radius: 10px;
+}
+.meet-controls-bar{
+    bottom: 0;
+    background-color: #96b3d2;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}

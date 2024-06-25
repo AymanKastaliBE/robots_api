@@ -47,7 +47,6 @@ class Bill(models.Model):
     
 class Balance(models.Model):
     value = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
-    # updated_value = models.DecimalField(max_digits=7, decimal_places=2, default=0, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
     
     def __str__(self):

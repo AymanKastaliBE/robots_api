@@ -8,6 +8,9 @@ from . import models, forms, filters
 from django.views import generic, View
 import pandas as pd
 from django.http import HttpResponse
+from django.views.generic import FormView
+from django.views.generic.detail import SingleObjectMixin
+
 
 class HomepageView(django_views.View):
     template_name = 'ata_api/homepage.html'
@@ -29,7 +32,7 @@ user_profile_view = UserProfileView.as_view()
 @method_decorator(auth_decorators.allow_user_in_groups(groups=['Staff']), name='dispatch')
 class BillListView(generic.ListView):
     model = models.Bill
-    template_name = 'ata_api/bills.html'
+    template_name = 'ata_api/bills/bills.html'
     context_object_name = 'bills'
     paginate_by = 10
 
@@ -53,7 +56,7 @@ bill_list_view = BillListView.as_view()
 
 class BillDetailView(generic.DetailView):
     model = models.Bill
-    template_name = 'ata_api/bill_detail.html'
+    template_name = 'ata_api/bills/bill_detail.html'
     queryset = models.Bill.objects.all()
     
 bill_detail_view = BillDetailView.as_view()
@@ -62,7 +65,7 @@ bill_detail_view = BillDetailView.as_view()
 class BillCreateView(generic.edit.CreateView):
     model = models.Bill
     form_class = forms.BillForm
-    template_name = 'ata_api/bill_create.html'
+    template_name = 'ata_api/bills/bill_create.html'
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -76,7 +79,7 @@ bill_create_view = BillCreateView.as_view()
 class BillUpdateView(generic.edit.UpdateView):
     model = models.Bill
     form_class = forms.BillForm
-    template_name = 'ata_api/bill_update.html'
+    template_name = 'ata_api/bills/bill_update.html'
     
     def form_valid(self, form):
         return super().form_valid(form)
@@ -89,7 +92,7 @@ bill_update_view = BillUpdateView.as_view()
 
 class BillDeleteView(generic.edit.DeleteView):
     model = models.Bill
-    template_name = 'ata_api/bill_delete.html'
+    template_name = 'ata_api/bills/bill_delete.html'
     success_url = reverse_lazy('ata_api:bill_list_view')
 
 bill_delete_view = BillDeleteView.as_view()
@@ -139,3 +142,12 @@ class BillExportToExcelView(View):
         return response
     
 bill_export_to_excel_view = BillExportToExcelView.as_view()
+
+
+class DiabloView(django_views.View):
+    template_name = 'ata_api/diablo/index.html'
+    
+    def get(self, request):
+        return render(request, template_name=self.template_name)
+    
+diablo_view = DiabloView.as_view()

@@ -1,0 +1,146 @@
+{% extends "index.html" %}
+{% load ata_api_extras %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<div class="ps-4 pe-4">
+   <nav class="bills-nav mt-4 d-flex justify-content-between align-items-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="link-offset-1 link-underline link-underline-opacity-50" href="{% url 'ata_api:home_page_view' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bills</li>
+            </ol>
+        </nav>
+        <div>
+            {% if balance.value and balance.value > 0 %}
+                <h4 class="fw-bold text-center">
+                    <small>Balance:</small> <span class="text-success">+{{balance}}</span> <small>AED</small>
+                </h4>
+            {% elif balance.value and balance.value < 0 %}
+                <h4 class="fw-bold text-center">
+                    <small>Balance:</small> <span class="text-danger">{{balance}}</span> <small>AED</small>
+                </h4>
+            {% else %}
+                <h4 class="fw-bold text-center">
+                    <small>Balance:</small> <span class="text-secondary">0.00</span> <small>AED</small>
+                </h4>
+            {% endif %}
+        </div>
+   </nav>
+</div>
+    <section class="bills-section ps-3 pe-3">
+        <h1 class="text-center mb-4 display-4">
+            Bills
+        </h1>
+        <form method="GET">
+            {% crispy bill_filter.form %}
+        </form>
+        <hr>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Bill ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Staff Name</th>
+                <th scope="col">Supplier Name</th>
+                <th scope="col">Invoice Num.</th>
+                <th scope="col">Transaction Num.</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Vat</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Cash Received</th>
+                <th scope="col">Remarks</th>
+                <th scope="col">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for bill in bills  %}
+                    <tr>
+                        <th scope="row">
+                            <a class="link-offset-1 link-underline link-underline-opacity-50" href="{{bill.get_absolute_url}}">
+                                {{bill.id}}
+                            </a>
+                        </th>
+                        <td>{{bill.issued_at|date:"d/m/Y"}}</td>
+                        {% if bill.type == 'expense' %}
+                            <td>{{bill.staff}}</td>
+                            <td>{{bill.supplier_name}}</td>
+                            <td>{{bill.invoice_number}}</td>
+                            <td>{{bill.transaction_number}}</td>
+                            <td class="fw-bold">{{ bill.amount }}</td>
+                            <td class="fw-bold">{{bill.vat}}</td>
+                            <td class="fw-bold">{{bill.amount|calculate_total_amount:bill.vat}}</td>
+                            <td>-</td>
+                            <td class="fw-bold">{{bill.remark}}</td>
+                            {% if bill.scanned_pdf %}
+                            <td>
+                                <a target="_blank" class="link-offset-1 link-underline link-underline-opacity-50 fw-bold" href="{{bill.scanned_pdf.url}}">PDF Link</a>
+                            </td>
+                            {% else %}
+                            <td>
+                                <span class="text-danger fw-bold">
+                                    No PDF
+                                </span>
+                            </td>
+                            {% endif %}
+                        {% elif bill.type == 'recharge' %}
+                            <td class="text-success fw-bold">{{bill.staff}}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="text-success fw-bold">{{ bill.amount }}</td>
+                            <td>-</td>
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    <tr class="table-secondary">
+                        <th scope="row"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2" class="fw-bold"><b>Total Bills Amount</b></td>
+                        <td><b>{{bills|calculate_filtered_amount_vat}}</b></td>
+                        <td colspan="2" class="p-0"><a class="btn btn-success col-12 fw-bold" href="{% url 'ata_api:bill_export_to_excel_view' %}?{{ request.GET.urlencode }}">Export to Excel</a></td>
+                    </tr>
+                </tbody>
+          </table>
+
+          <nav aria-label="Pagination" style="text-align: center;">
+            <ul class="pagination" style="display: inline-block;">
+                {% if page_obj.has_previous %}
+                    <li class="page-item" style="display: inline-block;">
+                        <a class="page-link" href="?page=1">&laquo; First</a>
+                    </li>
+                    <li class="page-item" style="display: inline-block;">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item active" style="display: inline-block;">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item" style="display: inline-block;">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item" style="display: inline-block;">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+    </section>
+{% endblock %}

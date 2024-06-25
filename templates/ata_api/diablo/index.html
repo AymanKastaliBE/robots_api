@@ -1,0 +1,98 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Made by Vaibhav Yadav</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diablo_styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="title"><p class="heading">Action To Action Robotics -> Diablo Teleprecence</p></h1>
+    <p id="notification" hidden></p>
+    <div class="entry-modal" id="entry-modal">
+        <p>Please enter the password</p>
+        <input id="room-input" class="room-input" placeholder="password">
+        <div>
+            <!-- <button onclick="createRoom()">Create Room</button> -->
+            <button onclick="joinRoom()">Log In</button>
+        </div>
+    </div>
+    <div class="meet-area">
+        
+        <!-- Remote Video Element-->
+        <div  class="custom" style="width: 680px; height: 480px; position: absolute; background-color: aliceblue; display: flex; justify-content: center; align-items: center; ">
+            <h1 class="robotside">Live robot stream</h1>
+            <img style="position: absolute; z-index: 1; left: -8px; top: 209px; width: 675px;" src="/media/images/line.png"/>
+            <video style="position: relative; z-index: 0;" id="remote-video" >
+                <!-- Add your video source here -->
+            </video>
+            <h2 class="use">Use your keyboard to drive the robot</h2>
+          </div>
+          
+
+        <!-- Local Video Element-->
+        <div>
+            <h1 class="oprator" >Oprator</h1>
+            <video id="local-video">
+        </video>
+    </div>
+    <img class ="controlls" src="/media/images/controlls.png" /> 
+        <!-- <div class="meet-controls-bar">
+            <button onclick="startScreenShare()">Screen Share</button>
+        </div> -->
+        <!-- <div class="Group12" style="width: 760px; height: 333.80px; position: absolute; top: 300px; right: 50px">
+            <div class="Rectangle8" style="width: 760px; height: 333.80px; left: 0px; top: 0px; position: absolute; background: #f7f4f4; border-radius: 36.63px"></div>
+            <div class="Group1" style="width: 220.59px; height: 211.43px; left: 44.12px; top: 66.59px; position: absolute">
+              <div class="Group2" style="width: 112.38px; height: 73.25px; left: 53.27px; top: 0px; position: absolute; " >
+                <div class="W" style="left: 49.11px; top: 26.64px; position: absolute; color: #9B8E8E; font-size: 16.65px;  font-weight: 700; word-wrap: break-word">W</div>
+              </div>
+              <div class="Group5" style="width: 73.25px; height: 112.38px; left: 0px; top: 49.95px; position: absolute">
+                <div class="A" style="left: 27.47px; top: 45.78px; position: absolute; color: #9B8E8E; font-size: 16.65px;  font-weight: 700; word-wrap: break-word">A</div>
+              </div>
+              <div class="Group4" style="width: 112.38px; height: 73.25px; left: 54.94px; top: 138.18px; position: absolute">
+                <div class="S" style="left: 50.78px; top: 26.64px; position: absolute; color: #9B8E8E; font-size: 16.65px;  font-weight: 700; word-wrap: break-word">S</div>
+              </div>
+              <div class="Group3" style="width: 73.25px; height: 112.38px; left: 147.34px; top: 49.95px; position: absolute">
+                <div class="D" style="left: 29.97px; top: 45.78px; position: absolute; color: #9B8E8E; font-size: 16.65px;  font-weight: 700; word-wrap: break-word">D</div>
+              </div>
+            </div>
+            <div class="Group6" style="width: 119.61px; height: 53.56px; left: 348.78px; top: 60.77px; position: absolute">
+              <button onclick="console.warn('clicked')">
+              <div class="Rectangle9" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressZStandUp" style="left: 31.63px; top: 10.82px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word"> Press  Z<br/>Stand Up </div>
+            </button>
+            </div>
+            <div class="Group7" style="width: 119.61px; height: 53.56px; left: 553.56px; top: 61.60px; position: absolute">
+              <div class="Rectangle10" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressXStandDown" style="left: 19.03px; top: 9.99px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word">    Press  X<br/>Stand Down </div>
+            </div>
+            <div class="Group11" style="width: 119.61px; height: 53.56px; left: 456.17px; top: 120.70px; position: absolute">
+              <div class="Rectangle11" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressCHeadCenter" style="left: 21.64px; top: 10.82px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word">    Press  C<br/>Head Center</div>
+            </div>
+            <div class="Group8" style="width: 119.61px; height: 53.56px; left: 348.78px; top: 178.97px; position: absolute">
+              <div class="Rectangle12" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressQTiltLeft" style="left: 24.14px; top: 10.82px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word">    Press  Q<br/>    Tilt Left</div>
+            </div>
+            <div class="Group9" style="width: 119.61px; height: 53.56px; left: 558.55px; top: 178.97px; position: absolute">
+              <div class="Rectangle13" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressETiltRight" style="left: 25.81px; top: 10.82px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word">   Press  E<br/>  Tilt Right</div>
+            </div>
+            <div class="Group10" style="width: 119.61px; height: 53.56px; left: 456.17px; top: 258.88px; position: absolute">
+              <div class="Rectangle14" style="width: 119.61px; height: 53.56px; left: 0px; top: 0px; position: absolute; background: #D9D9D9; border-radius: 17.85px"></div>
+              <div class="PressOStop" style="left: 25.81px; top: 10.82px; position: absolute; color: #9B8E8E; font-size: 13.32px;  font-weight: 700; word-wrap: break-word">   Press  O<br/>       Stop</div>
+            </div>
+            <div class="Line1" style="width: 235.59px; height: 0px; left: 296.34px; top: 289.70px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; border: 0.83px #C3C3C3 solid"></div>
+            <div class="ControlsPad" style="left: 322.15px; top: 9.16px; position: absolute; color: #9E9E9E; font-size: 19.98px;  font-weight: 400; word-wrap: break-word">Controls Pad</div>
+          </div> -->
+    </div>
+</body>
+
+<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+<script src="{% static 'js/diablo_controls.js' %}"></script>
+<script src="{% static 'js/diablo_scripts.js' %}"></script>
+
+</html>
